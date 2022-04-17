@@ -9,18 +9,38 @@ const firebaseConfig = {
       messagingSenderId: "999123393708",
       appId: "1:999123393708:web:0fad4e8092c20bd5d19309"
     };
+  firebase.initializeApp(firebaseConfig);
+  //ADD YOUR FIREBASE LINKS
+  function addRoom() {
+      var roomname=document.getElementById("roomName").value
+      firebase.database().ref("/").child(roomname).update({
+          purpose:"addingRoom"
+      })
+      localStorage.setItem("roomName", roomname)
+      window.location="kwitter_page.html"
+  }
     
     // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
     
 function getData() {firebase.database().ref("/").on('value', function(snapshot) {document.getElementById("output").innerHTML = "";snapshot.forEach(function(childSnapshot) {childKey  = childSnapshot.key;
-       Room_names = childKey;
+       roomname = childKey;
       //Start code
-
+        row="<div class='room_name' id="+roomname+" onclick='redirectToRoomName(this.id)'>#"+roomname+" </div>"
+        document.getElementById("output").innerHTML+=row
       //End code
       });});}
 getData();
 
 function logout() {
+  localStorage.removeItem("username")
+  localStorage.removeItem("roomname")
+  window.location="index.html"
+}
 
+var username=localStorage.getItem("username")
+document.getElementById("welcome").innerHTML="Welcome "+username+"!"
+
+function redirectToRoomName(name) {
+  localStorage.setItem("roomname", name)
+  window.location="kwitter_page.html"
 }
